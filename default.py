@@ -23,6 +23,7 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 
     def onInit(self):
         print '2 Screensaver: onInit'
+        self.exit_requested = False
         self.monitor = self.ExitMonitor(self.exit)
 	#hiding date if needed
 	if Addon.getSetting('hidedate') == 'true':
@@ -95,9 +96,15 @@ class Screensaver(xbmcgui.WindowXMLDialog):
 				vy = vy*-1
 			self.container.setPosition(new_x,new_y)
 			xbmc.sleep(self.bouncespeed)
+		if self.exit_requested:
+			# this may be to late, better split your xbmc.sleep()-calls to 
+			# sub sleeps of 500ms each and check each time for
+			# self.exit_requested
+			return
 	
     def exit(self):
         print '4 Screensaver: Exit requested'
+        self.exit_requested = True
         self.close()
 
 
